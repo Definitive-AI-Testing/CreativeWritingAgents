@@ -124,7 +124,10 @@ def google_trends(query: str, timeframe: str = "today 3-m",) -> str:
 
         search = GoogleSearch(params1)
         results = search.get_dict()
-        interest_over_time = results["interest_over_time"]
+        if "interest_over_time" in results:
+            interest_over_time = results["interest_over_time"]
+        else:
+            interest_over_time = "{}"
 
         search = GoogleSearch(params2)
         results = search.get_dict()
