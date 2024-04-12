@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 with st.sidebar:
     anth_api_key = st.text_input("Anthropic API Key", key="feedback_api_key", type="password")
+    serp_api_key = st.text_input("SERP API Key", key="feedback_api_key", type="password")
 
 llm = ChatAnthropic(temperature=0.3, anthropic_api_key=anth_api_key, model='claude-3-opus-20240229')
 
