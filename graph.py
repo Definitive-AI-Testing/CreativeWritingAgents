@@ -20,7 +20,9 @@ load_dotenv('Outputs/enviroment.env')
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-anth_api_key = os.environ['ANTH_API_KEY']
+with st.sidebar:
+    anth_api_key = st.text_input("Anthropic API Key", key="feedback_api_key", type="password")
+
 llm = ChatAnthropic(temperature=0.3, anthropic_api_key=anth_api_key, model='claude-3-opus-20240229')
 
 class ArticleWritingState(TypedDict):
@@ -155,6 +157,7 @@ def main():
     try:
         # Get user input for the Research and Optimization Agent
         research_agent_input = st.text_input("Enter topic, key ideas, products, potential key phrases, and example articles:")
+        widget_update_func = st.empty().code
 
         if research_agent_input:
             workflow = StateGraph(ArticleWritingState)
@@ -183,6 +186,7 @@ def main():
             input_data = {"input": research_agent_input}
             for s in app.stream(input_data):
                 print(s)
+                widget_update_func(str(s))
             # st.write("Final Output:")
             # st.write(content_output)
             # st.session_state.messages.append({"role": "assistant", "content": content_output})
