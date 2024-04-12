@@ -6,7 +6,7 @@ from langchain_anthropic import ChatAnthropic
 from langchain.agents.tools import Tool
 from langchain.agents import AgentExecutor
 from langchain.prompts import PromptTemplate
-from tools import google_trends_tool, web_search, article_web_search
+from tools import google_trends_tool, web_search, article_web_search, serp_api_key
 from StreamlitTools import streamlit_tool
 from reflection import create_reflection_agent
 from prompts import agent_prompt1, agent_prompt2, agent_prompt3, agent_prompt4, agent_prompt5
