@@ -26,7 +26,11 @@ human_tool = HumanInputRun(input_func=get_input)
 
 
 load_dotenv()
-api_key = '787635eb77da4daf42e7253408e4cf68fc878805f403eb41685dbb16dcbc34ff'
+
+import streamlit as st
+with st.sidebar:
+    serp_api_key = st.text_input("SERP API Key", key="feedback_api_key", type="password")
+
 
 class GoogleTrendsInput(BaseModel):
     """Input for Google Trends API tool."""
@@ -52,7 +56,7 @@ class GoogleTrendsTool(BaseTool):
         "tz": "420",
         "geo": "US",
         "data_type": "TIMESERIES",
-        "api_key": api_key
+        "api_key": serp_api_key
         }
 
         params2 = {
@@ -88,24 +92,16 @@ class GoogleTrendsTool(BaseTool):
         raise NotImplementedError("GoogleTrendsTool does not support async")
     
 
-class CalculatorInput(BaseModel):
-    a: int = Field(description="first number")
-    b: int = Field(description="second number")
-
-
-def multiply(a: int, b: int) -> int:
-    """Multiply two numbers."""
-    return a * b
-
-
-calculator = StructuredTool.from_function(
-    func=multiply,
-    name="Calculator",
-    description="multiply numbers",
-    args_schema=CalculatorInput,
-    return_direct=True,
-    # coroutine= ... <- you can specify an async method if desired as well
-)
+from langchain_community.document_loaders.web_base import WebBaseLoader
+from StreamlitTools import streamlit_tool
+@tool("article_web_search")
+def article_web_search(query: str) -> str:
+    """Get's articles from human"""
+    print(query)
+    human_tool = streamlit_tool._run(query)
+    loader = WebBaseLoader(human_tool)
+    data = loader.load()
+    return data[0]
 
 @tool("google_trends", args_schema=GoogleTrendsInput, return_direct=True)
 def google_trends(query: str, timeframe: str = "today 3-m",) -> str:
