@@ -27,10 +27,7 @@ human_tool = HumanInputRun(input_func=get_input)
 
 load_dotenv()
 
-import streamlit as st
-with st.sidebar:
-    serp_api_key = st.text_input("SERP API Key", key="feedback_api_key", type="password")
-
+serp_api_key = ""
 
 class GoogleTrendsInput(BaseModel):
     """Input for Google Trends API tool."""
