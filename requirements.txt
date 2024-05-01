@@ -1,5 +1,5 @@
 chromadb==0.4.21
-sqlite3 == 3.45.3
+sqlite3==3.41.2
 google_search_results==2.4.2
 langchain==0.1.16
 langchain_anthropic==0.1.11
