@@ -1,200 +1,96 @@
-from langchain.agents import AgentType, create_react_agent
-from langchain_openai import ChatOpenAI, OpenAI
+import os
+from langchain.agents import create_react_agent, create_tool_calling_agent, create_structured_chat_agent, AgentExecutor
 from langchain_anthropic import ChatAnthropic
-from langchain.agents.tools import Tool
-from langchain.agents import AgentExecutor
-from langchain.prompts import PromptTemplate
-from tools import human_interaction_tool, web_search, keyword_research
-from prompts import agent_prompt1, agent_prompt2, agent_prompt3, agent_prompt4, agent_prompt5
+from tools import google_trends, HumanInputRun, seo_keyword_check, humanTool
+from context import seo_best_practices_retriever, universal_orchestrator_retriever, wonderbotz_articles_retriever, rpa_cloud_migration_retriever, chatgpt_automation_retriever
+from prompts import agent1_prompt, agent2_prompt, agent3_prompt, agent4_prompt
+from dotenv import load_dotenv
+from typing import Dict
 
-import logging
+load_dotenv()
 
-# Set up logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+anth_api_key = os.environ['ANTH_API_KEY']
+llm = ChatAnthropic(temperature=0.3, model='claude-3-opus-20240229', anthropic_api_key=anth_api_key)
 
-anth_api_key = os.environ['anth_apikey']
-llm = ChatAnthropic(temperature=0.3, anthropic_api_key=anth_api_key, model='claude-3-opus-20240229')
-search = GoogleCustomSearchAPIWrapper()
-human_input = HumanInputRun()
+def create_agent1() -> AgentExecutor:
+    """Create and return the first agent (Keyphrase Researcher)."""
+    tools = [google_trends, HumanInputRun(), seo_best_practices_retriever]
+    agent = create_react_agent(llm=llm, tools=tools, prompt=agent1_prompt)
+    return AgentExecutor.from_agent_and_tools(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
 
-def create_keyword_researcher_agent():
-    """Create and return the Keyword Researcher Agent."""
-    keyword_researcher_tools = [
-        Tool(
-            name="Keyword Research Tool",
-            func=search.run,
-            description="Useful for researching keywords and analyzing search trends related to a topic."
-        ),
-        Tool(
-            name="Human Input",
-            func=human_input.run,
-            description="Useful for when you need to ask a human for additional input or clarification."
-        )
-    ]
+def create_agent2() -> AgentExecutor:
+    """Create and return the second agent (Content Outliner)."""
+    tools = [google_trends, seo_keyword_check, HumanInputRun(), seo_best_practices_retriever, universal_orchestrator_retriever, wonderbotz_articles_retriever, rpa_cloud_migration_retriever, chatgpt_automation_retriever]
+    agent = create_tool_calling_agent(llm, tools, agent2_prompt)
+    return AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
 
-    keyword_researcher_agent = create_react_agent(
-        llm, 
-        keyword_researcher_tools, 
-        PromptTemplate(template=agent_prompt1, input_variables=['agent_scratchpad', 'input', 'tool_names', 'tools'])
-    )
+def create_agent3() -> AgentExecutor:
+    """Create and return the third agent (Content Generator)."""
+    tools = [seo_keyword_check]
+    agent = create_react_agent(llm=llm, tools=tools, prompt=agent3_prompt)
+    return AgentExecutor.from_agent_and_tools(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
 
-    return AgentExecutor(
-        agent=keyword_researcher_agent,
-        tools=keyword_researcher_tools, 
-        verbose=True,
-        handle_parsing_errors=True
-    )
+def create_agent4() -> AgentExecutor:
+    """Create and return the fourth agent (Article Optimizer)."""
+    tools = [HumanInputRun(), seo_best_practices_retriever, wonderbotz_articles_retriever]
+    agent = create_structured_chat_agent(llm, tools, agent4_prompt)
+    return AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
 
-def create_writing_style_analyzer_agent():
-    """Create and return the Writing Style Analyzer Agent."""
-    writing_style_analyzer_tools = [
-        Tool(
-            name="Human Input",
-            func=human_input.run,
-            description="Useful for when you need to ask the human for example article links or other input."
-        ),
-        Tool(
-            name="Google Search",
-            func=web_search,
-            description="Useful for searching the web for the example article links provided by the human."
-        )
-    ]
+def run_agent_chain() -> Dict[str, str]:
+    """Run the agent chain and return the optimized article."""
+    agent1_executor = create_agent1()
+    agent2_executor = create_agent2()
+    agent3_executor = create_agent3()
+    agent4_executor = create_agent4()
 
-    writing_style_analyzer_prompt = PromptTemplate(
-        template=agent_prompt2,
-        input_variables=['agent_scratchpad', 'input', 'tool_names', 'tools']  
-    )
+    t1 ="""Multi-Platform RPA Management
 
-    writing_style_analyzer_agent = create_react_agent(
-        llm=llm,
-        tools=writing_style_analyzer_tools,
-        prompt=writing_style_analyzer_prompt,
-        verbose=True
-    )
+Key ideas to include:
+●	Traditionally automation companies have tried to lock you into using just their tech stack. As technology evolves ever faster the ability to use third party tools is more important. 
+●	Some customers have built many automations on one platform but want to use the new tools of another. 
+●	It used to be to change platforms you had to recode all of your automations
+●	Now you can keep the old automations running and innovate on a new platform or new tools and coordinate the hand off of tasks from one system to the other with a Universal Orchestrator. 
+●	Multi-platform orchestration is cheaper than migrating your entire code base and more flexible. 
+●	Allows you to take advantage of mixing in low cost alternatives with your top self RPA tools. 
+"""
 
-    return AgentExecutor(
-        agent=writing_style_analyzer_agent,
-        tools=writing_style_analyzer_tools,
-        verbose=True,
-        handle_parsing_errors=True
-    )
+    # Example input for the first agent
+    user_input = t1 #input("Enter the topic and key ideas to include: ")
+    input_keyphrase_research = {"input": user_input}
 
-def create_topic_researcher_agent():
-    """Create and return the Topic Researcher Agent."""
-    topic_researcher_tools = [
-        Tool(
-            name="Human Input",
-            func=human_input.run,
-            description="Useful for when you need to ask a human for input, like the article topic and key points to research."
-        ),
-        Tool(
-            name="Web Search",
-            func=search.run,
-            description="Useful for searching the internet for information on the article topic and key points."
-        )
-    ]
+    # Execute the first agent
+    output_keyphrase = agent1_executor.invoke(input_keyphrase_research)
 
-    topic_researcher_prompt = PromptTemplate(
-        template=agent_prompt3,
-        input_variables=['agent_scratchpad', 'input', 'tool_names', 'tools']  
-    )
-
-    topic_researcher_agent = create_react_agent(
-        llm=llm,
-        tools=topic_researcher_tools,
-        prompt=topic_researcher_prompt,
-        verbose=True
-    )
-
-    return AgentExecutor(
-        agent=topic_researcher_agent,
-        tools=topic_researcher_tools,
-        verbose=True,
-        handle_parsing_errors=True
-    )
-
-def create_article_writer_agent():
-    """Create and return the Article Writer Agent."""
-    article_writer_tools = []
-
-    article_writer_agent = create_react_agent(
-        llm, 
-        article_writer_tools, 
-        PromptTemplate(template=agent_prompt4, input_variables=['agent_scratchpad', 'input', 'tool_names', 'tools'])
-    )
-
-    return AgentExecutor(
-        agent=article_writer_agent,
-        tools=article_writer_tools,
-        verbose=True,
-        handle_parsing_errors=True
-    )
-
-def create_editor_agent():
-    """Create and return the Editor Agent."""
-    editor_tools = [
-        Tool(
-            name="Human Input",
-            func=human_interaction_tool,
-            description="A tool that allows the human to review the final article, provide feedback, and approve or request revisions."
-        )
-    ]
-
-    editor_agent = create_react_agent(
-        llm, 
-        editor_tools, 
-        PromptTemplate(template=agent_prompt5, input_variables=['agent_scratchpad', 'input', 'tool_names', 'tools'])
-    )
-
-    return AgentExecutor(
-        agent=editor_agent,
-        tools=editor_tools,
-        verbose=True,
-        handle_parsing_errors=True
-    )
-
-def article_writer(keyphrases, style_guide, research_notes):
-    """Run the Article Writer Agent with the provided inputs."""
-    input_data = {
-        "keyphrases": keyphrases,
-        "style_guide": style_guide, 
-        "research_notes": research_notes
+    # Use the output of the first agent as input for the second agent
+    input_content_outline = {
+        "keyphrase": output_keyphrase["output"],
+        "topic": user_input,
+        "key_ideas": user_input,
+        "seo_guidelines": output_keyphrase["output"]
     }
-    
-    try:
-        output = article_writer_executor.invoke(input_data)
-        return output
-    except Exception as e:
-        logger.error(f"Error in Article Writer Agent: {str(e)}")
-        raise
+
+    # Execute the second agent with the output of the first agent as its input
+    output_outline = agent2_executor.invoke(input_content_outline)
+
+    # Use the output of the second agent as input for the third agent
+    input_content_generator = {"input": output_outline["output"]}
+
+    # Execute the third agent with the output of the second agent as its input
+    output_content_generator = agent3_executor.invoke(input_content_generator)
+
+    # Use the output of the third agent as input for the fourth agent
+    input_article_optimizer = {"input": output_content_generator["output"]}
+
+    # Execute the fourth agent with the output of the third agent as its input
+    optimized_article = agent4_executor.invoke(input_article_optimizer)
+
+    return optimized_article
 
 if __name__ == "__main__":
-    keyword_researcher_executor = create_keyword_researcher_agent()
-    writing_style_analyzer_executor = create_writing_style_analyzer_agent()
-    topic_researcher_executor = create_topic_researcher_agent()
-    article_writer_executor = create_article_writer_agent()
-    editor_executor = create_editor_agent()
-
-    # Example usage
     try:
-        input_data_keyword = {"input": "The article topic is 'Best practices for training a new puppy'"}
-        output_keyword = keyword_researcher_executor.invoke(input_data_keyword["input"])
-        logger.info(f"Keyword Researcher Agent output: {output_keyword}")
-
-        input_data_style = {"input": "Please provide 1-3 links to example articles to analyze their writing style."}
-        output_style = writing_style_analyzer_executor.invoke(input_data_style)
-        logger.info(f"Writing Style Analyzer Agent output: {output_style}")
-
-        input_data_topic_research = {"input": "Article topic: The benefits and risks of artificial intelligence. Key points to cover: Current and future AI applications, ethical considerations, impact on jobs and the economy."}
-        output_topic_research = topic_researcher_executor.invoke(input_data_topic_research["input"])
-        logger.info(f"Topic Researcher Agent output: {output_topic_research}")
-
-        output_writer = article_writer(output_keyword, output_style, output_topic_research)
-        logger.info(f"Article Writer Agent output: {output_writer}")
-
-        input_data_editor = {"input": output_writer["output"]}
-        output_editor = editor_executor.invoke(input_data_editor)
-        logger.info(f"Editor Agent output: {output_editor}")
+        optimized_article = run_agent_chain()
+        print(f"Optimized article: {optimized_article['output']}")
+    except KeyError as e:
+        print(f"Error: Missing required environment variable - {str(e)}")
     except Exception as e:
-        logger.error(f"Error in AI Agent chain: {str(e)}")
+        print(f"An error occurred: {str(e)}")
