@@ -9,6 +9,9 @@ from typing import Dict, Any, TypedDict, Annotated, List, Union
 from langgraph.graph import END, StateGraph
 import streamlit as st
 from StreamlitTools import StreamlitInput
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 load_dotenv()
 with st.sidebar:
