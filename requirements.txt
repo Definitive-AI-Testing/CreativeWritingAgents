@@ -1,4 +1,4 @@
-chromadb==0.3.29
+chromadb
 pysqlite3-binary
 sqlite3
 google_search_results==2.4.2
