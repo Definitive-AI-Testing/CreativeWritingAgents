@@ -5,7 +5,6 @@ from langchain.tools.retriever import create_retriever_tool
 from langchain.vectorstores.chroma import Chroma
 import chromadb
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
-import(‘pysqlite3’)
 import sys
 sys.modules[‘sqlite3’] = sys.modules.pop(‘pysqlite3’)
 
