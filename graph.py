@@ -1,4 +1,11 @@
 import os
+
+import pysqlite3
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+import streamlit as st
+import sqlite3
+
 from langchain.agents import create_react_agent, create_tool_calling_agent, create_structured_chat_agent, AgentExecutor
 from langchain_anthropic import ChatAnthropic
 from tools import google_trends, seo_keyword_check
@@ -7,12 +14,8 @@ from prompts import agent1_prompt, agent2_prompt, agent3_prompt, agent4_prompt
 from dotenv import load_dotenv
 from typing import Dict, Any, TypedDict, Annotated, List, Union
 from langgraph.graph import END, StateGraph
-import streamlit as st
 from StreamlitTools import StreamlitInput
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-import sqlite3
+
 
 load_dotenv()
 with st.sidebar:
