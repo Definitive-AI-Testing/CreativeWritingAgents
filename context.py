@@ -6,7 +6,8 @@ from langchain.vectorstores.chroma import Chroma
 import chromadb
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 import sys
-sys.modules[‘sqlite3’] = sys.modules.pop(‘pysqlite3’)
+__import__('pysqlite3')
+sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")   
 
 modelPath = "BAAI/bge-small-en-v1.5" 
 model_kwargs = {'device':'cpu','trust_remote_code':'True'}
