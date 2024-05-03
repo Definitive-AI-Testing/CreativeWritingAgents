@@ -9,7 +9,7 @@ import sys
 __import__('pysqlite3')
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")   
 
-modelPath = "gte-small" 
+modelPath = "thenlper/gte-small" 
 model_kwargs = {'device':'cpu','trust_remote_code':'True'}
 encode_kwargs = {'normalize_embeddings': True}
 
