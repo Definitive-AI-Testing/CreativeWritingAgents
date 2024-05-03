@@ -144,6 +144,3 @@ class StreamlitInput(BaseTool):
                 st.stop()
             return user_input
 
-
-streamlit_tool = StreamlitInput()
-
