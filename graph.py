@@ -71,7 +71,7 @@ def content_outliner_node(state: ArticleWritingState) -> ArticleWritingState:
         "key_ideas": state["input"],
         "seo_guidelines": state["keyphrase_research_output"]["output"]
     }
-    output_outline = agent2_executor.invoke(input_content_outline)
+    output_outline = agent2_executor.invoke({"input": state["keyphrase_research_output"]["output"]})
     return {**state, "content_outline_output": output_outline}
 
 def content_generator_node(state: ArticleWritingState) -> ArticleWritingState:
