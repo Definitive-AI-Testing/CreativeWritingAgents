@@ -9,7 +9,7 @@ import sys
 __import__('pysqlite3')
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")   
 
-modelPath = "BAAI/bge-small-en-v1.5" 
+modelPath = "gte-small" 
 model_kwargs = {'device':'cpu','trust_remote_code':'True'}
 encode_kwargs = {'normalize_embeddings': True}
 
