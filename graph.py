@@ -25,7 +25,6 @@ with st.sidebar:
 
 streamlit_tool = StreamlitInput()
 
-anth_api_key = os.environ['ANTH_API_KEY']
 llm = ChatAnthropic(temperature=0.3, model='claude-3-opus-20240229', anthropic_api_key=anth_api_key)
 
 class ArticleWritingState(TypedDict):
