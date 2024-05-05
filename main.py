@@ -8,7 +8,7 @@ from st_pages import Page, show_pages, add_page_title
 
 show_pages(
     [
-        Page("main.py", "Home", "🏠"),
+        Page("main.py", "AI Agents", "🏠"),
         Page("graph.py", "Content Creation Team"),
     ]
 )
