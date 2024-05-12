@@ -14,14 +14,10 @@ Input:
 
 Output:
 - Selected target keyphrase and explanation for approval, sent to the requester
-- Approved keyphrase, topic, key ideas, and SEO guidelines, sent to Agent 2
+- Approved keyphrase, topic, key ideas, and SEO guidelines, sent to Agent 2"""
 
-Tools:
-- Google Trends API Integration
-- Keyphrase Analysis and Selection Tool
-- Requester Approval Tool
-Do the preceeding tasks as best you can. You have access to the following tools:
-{tools}
+react_prompt = """Do the preceeding tasks and answer the following questions as best you can. You have access to the following tools:
+[{tools}]
 Use the following format:
 Input: the inputs to the tasks you must do
 Thought: you should always think about what to do
@@ -38,7 +34,10 @@ Begin!
 Question: {input}
 Thought:{agent_scratchpad}"""
 
-agent1_prompt = PromptTemplate(template=agent_prompt1, input_variables=['agent_scratchpad', 'input', 'tool_names', 'tools'])
+messages = [    SystemMessagePromptTemplate(prompt=PromptTemplate(input_variables=[], template=agent_prompt1)),
+                MessagesPlaceholder(variable_name='chat_history', optional=True),
+                HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['tool_names', 'tools', 'agent_scratchpad', 'input',], template=react_prompt))]
+agent1_prompt = ChatPromptTemplate.from_messages(messages)
 
 agent2_prompt = ChatPromptTemplate.from_messages(
     [
@@ -90,7 +89,10 @@ Begin!
 Question: {input}
 Thought:{agent_scratchpad}"""
 
-agent3_prompt = PromptTemplate(template=agent_prompt3, input_variables=['agent_scratchpad', 'input', 'tool_names', 'tools'])
+messages = [    SystemMessagePromptTemplate(prompt=PromptTemplate(input_variables=[], template=agent_prompt3)),
+                MessagesPlaceholder(variable_name='chat_history', optional=True),
+                HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['tool_names', 'tools', 'agent_scratchpad', 'input',], template=react_prompt))]
+agent_prompt3 = ChatPromptTemplate.from_messages(messages)
 
 agent_prompt4 = """You are an intelligent and meticulous editor and content optimizer. Your role is to review, edit, and optimize the generated article content to improve its quality, readability, and SEO performance.
 
