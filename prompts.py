@@ -92,7 +92,7 @@ Thought:{agent_scratchpad}"""
 messages = [    SystemMessagePromptTemplate(prompt=PromptTemplate(input_variables=[], template=agent_prompt3)),
                 MessagesPlaceholder(variable_name='chat_history', optional=True),
                 HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['tool_names', 'tools', 'agent_scratchpad', 'input',], template=react_prompt))]
-agent_prompt3 = ChatPromptTemplate.from_messages(messages)
+agent3_prompt = ChatPromptTemplate.from_messages(messages)
 
 agent_prompt4 = """You are an intelligent and meticulous editor and content optimizer. Your role is to review, edit, and optimize the generated article content to improve its quality, readability, and SEO performance.
 
