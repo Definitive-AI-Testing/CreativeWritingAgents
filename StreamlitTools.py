@@ -113,6 +113,7 @@ class StreamlitInput(BaseTool):
         
         while input_text == None:        
             input_text = self.get_user_input()
+            print(input_text) 
             time.sleep(2)        
         
         if self.user_input:
