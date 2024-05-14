@@ -115,23 +115,26 @@ Key ideas to include:
         message = st.chat_message("assistant")
         message.write("Enter topic, key ideas, products, potential key phrases, and example articles")
 
-        if prompt := st.chat_input("Enter Text", key="user_input1"):
-            st.chat_message("user").write(prompt)
+        input_text = st.chat_input("Enter Text", key="user_input1"):
+        while input_text == None:     
+            print("wait") 
+            time.sleep(2)       
+        st.chat_message("user").write(input_text)
 
-            widget_update_func = st.empty().code
-            input_data = {"input": prompt}
+        widget_update_func = st.empty().code
+        input_data = {"input": input_text}
 
-            for s in app.stream(input_data):
-                print(s)
+        for s in app.stream(input_data):
+            print(s)
     
-            progress_bar = st.progress(0)
-            
-            for i, s in enumerate(app.stream(input_data)):
-                agent_name = list(s.keys())[-1]
-                st.write(f"Agent: {agent_name}")
-                st.write(f"Results/Outputs:")
-                st.write(s[agent_name])
-                progress_bar.progress((i + 1) / 4)    
+        progress_bar = st.progress(0)
+        
+        for i, s in enumerate(app.stream(input_data)):
+            agent_name = list(s.keys())[-1]
+            st.write(f"Agent: {agent_name}")
+            st.write(f"Results/Outputs:")
+            st.write(s[agent_name])
+            progress_bar.progress((i + 1) / 4)    
 
     except KeyError as e:
         print(f"Error: Missing required environment variable - {str(e)}")
