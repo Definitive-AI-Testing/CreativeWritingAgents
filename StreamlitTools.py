@@ -8,7 +8,6 @@ from typing import Callable, Optional
 from streamlit.delta_generator import DeltaGenerator
 from langchain_core.pydantic_v1 import Field
 from langchain_core.tools import BaseTool
-import time
 
 class StreamlitHandler(BaseCallbackHandler):
     """Base callback handler that can be used to handle callbacks from langchain."""
@@ -113,8 +112,7 @@ class StreamlitInput(BaseTool):
         
         while input_text == None:        
             input_text = self.get_user_input()
-            print(input_text) 
-            time.sleep(2)        
+            print(input_text)  
         
         if self.user_input:
             self.messages.append({"role": "user", "content": self.user_input})
