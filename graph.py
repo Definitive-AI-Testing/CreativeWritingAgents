@@ -111,24 +111,27 @@ Key ideas to include:
 ●	Allows you to take advantage of mixing in low cost alternatives with your top self RPA tools. 
 """
         #user_input = st.text_input("Enter topic, key ideas, products, potential key phrases, and example articles:")
+        
         message = st.chat_message("assistant")
         message.write("Enter topic, key ideas, products, potential key phrases, and example articles")
-        initial = st.chat_input("Enter Text", key="user_input1")
 
-        widget_update_func = st.empty().code
-        input_data = {"input": initial}
+        if prompt := st.chat_input("Enter Text", key="user_input1"):
+            st.chat_message("user").write(prompt)
 
-        for s in app.stream(input_data):
-            print(s)
+            widget_update_func = st.empty().code
+            input_data = {"input": prompt}
 
-        progress_bar = st.progress(0)
-        
-        for i, s in enumerate(app.stream(input_data)):
-            agent_name = list(s.keys())[-1]
-            st.write(f"Agent: {agent_name}")
-            st.write(f"Results/Outputs:")
-            st.write(s[agent_name])
-            progress_bar.progress((i + 1) / 4)    
+            for s in app.stream(input_data):
+                print(s)
+    
+            progress_bar = st.progress(0)
+            
+            for i, s in enumerate(app.stream(input_data)):
+                agent_name = list(s.keys())[-1]
+                st.write(f"Agent: {agent_name}")
+                st.write(f"Results/Outputs:")
+                st.write(s[agent_name])
+                progress_bar.progress((i + 1) / 4)    
 
     except KeyError as e:
         print(f"Error: Missing required environment variable - {str(e)}")
