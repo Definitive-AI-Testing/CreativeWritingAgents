@@ -14,7 +14,7 @@ from prompts import agent1_prompt, agent2_prompt, agent3_prompt, agent4_prompt
 from dotenv import load_dotenv
 from typing import Dict, Any, TypedDict, Annotated, List, Union
 from langgraph.graph import END, StateGraph
-from StreamlitTools import StreamlitInput
+from StreamlitTools import StreamlitInput, StreamlitHandler
 
 
 load_dotenv()
@@ -24,7 +24,7 @@ with st.sidebar:
 
 streamlit_tool = StreamlitInput()
 
-llm = ChatAnthropic(temperature=0.3, model='claude-3-opus-20240229', anthropic_api_key=anth_api_key)
+llm = ChatAnthropic(temperature=0.3, model='claude-3-opus-20240229', anthropic_api_key=anth_api_key,callbacks=[StreamlitHandler()])
 
 class ArticleWritingState(TypedDict):
     input: str
