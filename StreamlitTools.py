@@ -95,13 +95,13 @@ class StreamlitInput(BaseTool):
         self.ai_message: DeltaGenerator = None
         self.user_message: DeltaGenerator = None    
         self.user_input: str = st.chat_input('Enter text here:', key='widget', on_submit=self.clear_text)
-
-
+    
     def display_messages(self):
         for msg in self.messages:
             st.chat_message(msg["role"]).write(msg["content"])
 
     def clear_text(self):
+        print(st.session_state.user_input)
         st.session_state.user_text = st.session_state.widget
         self.user_input = st.session_state.widget
 
