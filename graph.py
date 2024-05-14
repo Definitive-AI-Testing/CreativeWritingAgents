@@ -123,13 +123,15 @@ Key ideas to include:
         
         input_data = {"input": streamlit_tool.user_input}
 
+        progress_bar = st.progress(0)
+        
         for i, s in enumerate(app.stream(input_data)):
             print(s)
-            agent_name = list(s.keys())[-1]
-            st.write(f"Agent: {agent_name}")
-            st.write(f"Results/Outputs:")
-            st.write(s[agent_name])
-            progress_bar.progress((i + 1) / 4)      
+            #agent_name = list(s.keys())[-1]
+            #st.write(f"Agent: {agent_name}")
+            #st.write(f"Results/Outputs:")
+            #st.write(s[agent_name])
+            #progress_bar.progress((i + 1) / 4)      
 
     except KeyError as e:
         print(f"Error: Missing required environment variable - {str(e)}")
