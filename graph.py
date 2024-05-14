@@ -111,9 +111,9 @@ Key ideas to include:
 ●	Allows you to take advantage of mixing in low cost alternatives with your top self RPA tools. 
 """
         #user_input = st.text_input("Enter topic, key ideas, products, potential key phrases, and example articles:")
-        streamlit_tool.add_ai_message("Enter topic, key ideas, products, potential key phrases, and example articles:")
+        input1 = streamlit_tool._run("Enter topic, key ideas, products, potential key phrases, and example articles:")
         widget_update_func = st.empty().code
-        input_data = {"input": t1}
+        input_data = {"input": input1}
 
         for s in app.stream(input_data):
             print(s)
