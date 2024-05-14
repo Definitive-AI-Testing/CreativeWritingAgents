@@ -142,7 +142,7 @@ class StreamlitInput(BaseTool):
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         self.prompt_func(query)
-        self.display_messages()        
+        #self.display_messages()        
         user_input = self.get_text()
         if user_input:
             if user_input == "q":
