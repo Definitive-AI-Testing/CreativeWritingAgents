@@ -101,7 +101,7 @@ class StreamlitInput(BaseTool):
             st.chat_message(msg["role"]).write(msg["content"])
 
     def clear_text(self):
-        print(st.session_state.user_input)
+        print("clear_text")
         st.session_state.user_text = st.session_state.widget
         self.user_input = st.session_state.widget
 
