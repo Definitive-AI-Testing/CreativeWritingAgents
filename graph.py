@@ -8,7 +8,7 @@ import sqlite3
 
 from langchain.agents import create_react_agent, create_tool_calling_agent, create_structured_chat_agent, AgentExecutor
 from langchain_anthropic import ChatAnthropic
-from tools import google_trends, seo_keyword_check
+from tools import seo_keyword_check, human_tool #google_trends, 
 from context import seo_best_practices_retriever, universal_orchestrator_retriever, wonderbotz_articles_retriever, rpa_cloud_migration_retriever, chatgpt_automation_retriever
 from prompts import agent1_prompt, agent2_prompt, agent3_prompt, agent4_prompt
 from dotenv import load_dotenv
@@ -22,7 +22,6 @@ with st.sidebar:
     anth_api_key = st.text_input("Anthropic API Key", key="anth_api_key", type="password")
     serp_api_key = st.text_input("SERP API Key", key="serp_api_key", type="password")
 
-
 streamlit_tool = StreamlitInput()
 
 llm = ChatAnthropic(temperature=0.3, model='claude-3-opus-20240229', anthropic_api_key=anth_api_key)
@@ -35,7 +34,7 @@ class ArticleWritingState(TypedDict):
     optimized_article: Dict[str, Any]
 
 def create_agent1() -> AgentExecutor:
-    tools = [google_trends, streamlit_tool]
+    tools = [streamlit_tool] #google_trends
     agent = create_react_agent(llm=llm, tools=tools, prompt=agent1_prompt)
     return AgentExecutor.from_agent_and_tools(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
 
@@ -111,12 +110,22 @@ Key ideas to include:
 ●	Multi-platform orchestration is cheaper than migrating your entire code base and more flexible. 
 ●	Allows you to take advantage of mixing in low cost alternatives with your top self RPA tools. 
 """
-        user_input = st.text_input("Enter topic, key ideas, products, potential key phrases, and example articles:")
+        #user_input = st.text_input("Enter topic, key ideas, products, potential key phrases, and example articles:")
+        streamlit_tool.add_ai_message("Enter topic, key ideas, products, potential key phrases, and example articles:")
         widget_update_func = st.empty().code
-        input_data = {"input": user_input}
+        input_data = {"input": t1}
 
         for s in app.stream(input_data):
             print(s)
+
+        progress_bar = st.progress(0)
+        
+        for i, s in enumerate(app.stream(input_data)):
+            agent_name = list(s.keys())[-1]
+            st.write(f"Agent: {agent_name}")
+            st.write(f"Results/Outputs:")
+            st.write(s[agent_name])
+            progress_bar.progress((i + 1) / 4)    
 
     except KeyError as e:
         print(f"Error: Missing required environment variable - {str(e)}")
