@@ -112,21 +112,19 @@ Key ideas to include:
 """
         #user_input = st.text_input("Enter topic, key ideas, products, potential key phrases, and example articles:")
         
-        message = st.chat_message("assistant")
-        message.write("Enter topic, key ideas, products, potential key phrases, and example articles")
-
-        input_text = st.chat_input("Enter Text", key="user_input1")
-        while input_text == None:     
-            print("wait") 
-            time.sleep(2)       
-        st.chat_message("user").write(input_text)
-
         widget_update_func = st.empty().code
-        input_data = {"input": input_text}
+        streamlit_tool.add_ai_message("Enter topic, key ideas, products, potential key phrases, and example articles")
+
+        while streamlit_tool.user_input == None:     
+            st.write("waiting")
+            time.sleep(2)       
+        st.chat_message("user").write(streamlit_tool.user_input)
+        
+        input_data = {"input": streamlit_tool.user_input}
 
         for s in app.stream(input_data):
             print(s)
-    
+            
         progress_bar = st.progress(0)
         
         for i, s in enumerate(app.stream(input_data)):
