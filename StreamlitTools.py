@@ -131,6 +131,11 @@ class StreamlitInput(BaseTool):
             self.ai_message.write(input)
             self.messages.append({"role": "assistant", "content": input})
 
+    def add_ai_message(self, input):
+        self.ai_message = st.chat_message("assistant")
+        self.ai_message.write(input)
+        self.messages.append({"role": "assistant", "content": input})
+    
     def _run(
         self,
         query: str,
