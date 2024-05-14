@@ -115,7 +115,7 @@ Key ideas to include:
         message = st.chat_message("assistant")
         message.write("Enter topic, key ideas, products, potential key phrases, and example articles")
 
-        input_text = st.chat_input("Enter Text", key="user_input1"):
+        input_text = st.chat_input("Enter Text", key="user_input1")
         while input_text == None:     
             print("wait") 
             time.sleep(2)       
