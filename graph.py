@@ -123,7 +123,7 @@ Key ideas to include:
         
         input_data = {"input": streamlit_tool.user_input}
 
-        progress_bar = st.progress(0)
+        #progress_bar = st.progress(0)
         
         for i, s in enumerate(app.stream(input_data)):
             print(s)
