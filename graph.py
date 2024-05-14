@@ -59,6 +59,7 @@ agent3_executor = create_agent3()
 agent4_executor = create_agent4()
 
 def keyphrase_researcher_node(state: ArticleWritingState) -> ArticleWritingState:
+    st.write("keyphrase_researcher_node")
     input_keyphrase_research = {"input": state["input"]}
     output_keyphrase = agent1_executor.invoke(input_keyphrase_research)
     return {**state, "keyphrase_research_output": output_keyphrase}
