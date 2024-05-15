@@ -97,8 +97,8 @@ if __name__ == "__main__":
         widget_update_func = st.empty().code
         streamlit_tool.add_ai_message("Enter topic, key ideas, products, potential key phrases, and example articles")
 
-        while streamlit_tool.user_input == None:     
-            st.write("waiting")
+        while streamlit_tool.user_input == None:    
+            print("waiting")
                
         st.chat_message("user").write(streamlit_tool.user_input)        
         optimized_article = run_agent_chain(streamlit_tool.user_input)
