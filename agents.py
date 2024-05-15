@@ -15,6 +15,7 @@ from prompts import agent1_prompt, agent2_prompt, agent3_prompt, agent4_prompt
 from dotenv import load_dotenv
 from typing import Dict
 from StreamlitTools import StreamlitInput, StreamlitHandler
+import time
 
 load_dotenv()
 
@@ -98,7 +99,7 @@ if __name__ == "__main__":
         streamlit_tool.add_ai_message("Enter topic, key ideas, products, potential key phrases, and example articles")
 
         while streamlit_tool.user_input == None:    
-            print("waiting")
+            time.sleep(2) 
                
         st.chat_message("user").write(streamlit_tool.user_input)        
         optimized_article = run_agent_chain(streamlit_tool.user_input)
