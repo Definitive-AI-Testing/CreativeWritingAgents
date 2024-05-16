@@ -24,7 +24,6 @@ with st.sidebar:
     serp_api_key = st.text_input("SERP API Key", key="serp_api_key", type="password")
     
 st.sidebar.title("Controls")
-start = st.sidebar.button("Start")
 stop = st.sidebar.button("Stop")
 
 def stop_processing():
