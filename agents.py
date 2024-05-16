@@ -22,13 +22,7 @@ load_dotenv()
 with st.sidebar:
     anth_api_key = st.text_input("Anthropic API Key", key="anth_api_key", type="password")
     serp_api_key = st.text_input("SERP API Key", key="serp_api_key", type="password")
-
-from multiprocessing import Process
-import streamlit as st
-import SessionState
-import time
-import psutil
-
+    
 st.sidebar.title("Controls")
 start = st.sidebar.button("Start")
 stop = st.sidebar.button("Stop")
