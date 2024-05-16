@@ -23,6 +23,23 @@ with st.sidebar:
     anth_api_key = st.text_input("Anthropic API Key", key="anth_api_key", type="password")
     serp_api_key = st.text_input("SERP API Key", key="serp_api_key", type="password")
 
+from multiprocessing import Process
+import streamlit as st
+import SessionState
+import time
+import psutil
+
+st.sidebar.title("Controls")
+start = st.sidebar.button("Start")
+stop = st.sidebar.button("Stop")
+
+def stop_processing():
+    st.session_state.clear()
+
+if stop:
+    stop_processing()
+    st.write("Stopped process")
+    
 llm = ChatAnthropic(temperature=0.3, model='claude-3-opus-20240229', anthropic_api_key=anth_api_key, callbacks=[StreamlitHandler()])
 
 streamlit_tool = StreamlitInput()
