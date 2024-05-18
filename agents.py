@@ -14,6 +14,7 @@ from context import seo_best_practices_retriever, universal_orchestrator_retriev
 from prompts import agent1_prompt, agent2_prompt, agent3_prompt, agent4_prompt
 from dotenv import load_dotenv
 from typing import Dict
+from reflection import create_reflection_agent
 from StreamlitTools import StreamlitInput, StreamlitHandler
 import time
 
@@ -48,17 +49,16 @@ def create_agent2() -> AgentExecutor:
     tools = [google_trends, seo_keyword_check, streamlit_tool, seo_best_practices_retriever, universal_orchestrator_retriever, wonderbotz_articles_retriever, rpa_cloud_migration_retriever, chatgpt_automation_retriever]
     agent = create_tool_calling_agent(llm, tools, agent2_prompt)
     return AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
-
+    
 def create_agent3() -> AgentExecutor:
     """Create and return the third agent (Content Generator)."""
-    tools = [seo_keyword_check]
-    agent = create_react_agent(llm=llm, tools=tools, prompt=agent3_prompt)
-    return AgentExecutor.from_agent_and_tools(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
+    agent = create_reflection_agent(llm=llm, prompt=agent3_prompt, num_reflections=3)
+    return agent 
 
 def create_agent4() -> AgentExecutor:
     """Create and return the fourth agent (Article Optimizer)."""
-    tools = [streamlit_tool, seo_best_practices_retriever, wonderbotz_articles_retriever]
-    agent = create_structured_chat_agent(llm, tools, agent4_prompt)
+    tools = [streamlit_tool, rpa_cloud_migration_retriever, universal_orchestrator_retriever]
+    agent = create_react_agent(llm, tools, agent4_prompt)
     return AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
 
 def run_agent_chain(user_input) -> Dict[str, str]:
