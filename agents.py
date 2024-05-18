@@ -34,7 +34,7 @@ if stop:
     stop_processing()
     st.write("Stopped process")
     
-llm = ChatAnthropic(temperature=0.3, model='claude-3-opus-20240229', anthropic_api_key=anth_api_key, callbacks=[StreamlitHandler()])
+llm = ChatAnthropic(temperature=0.3, model='claude-3-opus-20240229', anthropic_api_key=anth_api_key, max_tokens_to_sample= 4096, callbacks=[StreamlitHandler()])
 
 streamlit_tool = StreamlitInput()
 
