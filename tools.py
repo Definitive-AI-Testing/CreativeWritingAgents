@@ -32,9 +32,6 @@ serp_api_key = ""
 class GoogleTrendsInput(BaseModel):
     input: str = Field(description='A JSON string containing the search term(s) to analyze trends for (as "query"), the time range (as "timeframe", default is past 3 months), and optionally the geographic location (as "geo", default is worldwide). Example: {"query": "artificial intelligence, machine learning", "timeframe": "today 12-m", "geo": "US"}')
 
-
-serp_api_key = ""
-
 @tool("google_trends", args_schema=GoogleTrendsInput)
 def google_trends(query: str, timeframe: str = "today 3-m",) -> str:
         """A custom tool that integrates with the Google Trends API to fetch data on potential key phrases, handle API requests, and process the response data in a structured format for analysis."""
