@@ -97,43 +97,36 @@ workflow.add_edge("content_generator", "article_optimizer")
 workflow.add_edge("article_optimizer", END)
 
 
-app = workflow.compile()
+# app = workflow.compile()
+# import time
+# if __name__ == "__main__":
+#     try:
 
-if __name__ == "__main__":
-    try:
-        t1 = """Multi-Platform RPA Management
+#         #user_input = st.text_input("Enter topic, key ideas, products, potential key phrases, and example articles:")
+#         #streamlit_tool.add_ai_message("Enter topic, key ideas, products, potential key phrases, and example articles:")
+#         #input1 = streamlit_tool._run("Enter topic, key ideas, products, potential key phrases, and example articles:")
 
-Key ideas to include:
-●	Traditionally automation companies have tried to lock you into using just their tech stack. As technology evolves ever faster the ability to use third party tools is more important. 
-●	Some customers have built many automations on one platform but want to use the new tools of another. 
-●	It used to be to change platforms you had to recode all of your automations
-●	Now you can keep the old automations running and innovate on a new platform or new tools and coordinate the hand off of tasks from one system to the other with a Universal Orchestrator. 
-●	Multi-platform orchestration is cheaper than migrating your entire code base and more flexible. 
-●	Allows you to take advantage of mixing in low cost alternatives with your top self RPA tools. 
-"""
-        #user_input = st.text_input("Enter topic, key ideas, products, potential key phrases, and example articles:")
+#         widget_update_func = st.empty().code
+#         streamlit_tool.add_ai_message("Enter topic, key ideas, products, potential key phrases, and example articles")
+
+#         while streamlit_tool.user_input == None:     
+#             st.write("waiting")
+#             time.sleep(2)       
+#         st.chat_message("user").write(streamlit_tool.user_input)
         
-        widget_update_func = st.empty().code
-        streamlit_tool.add_ai_message("Enter topic, key ideas, products, potential key phrases, and example articles")
+#         input_data = {"input": streamlit_tool.user_input}
 
-        while streamlit_tool.user_input == None:     
-            st.write("waiting")
-            time.sleep(2)       
-        st.chat_message("user").write(streamlit_tool.user_input)
+#         progress_bar = st.progress(0)
         
-        input_data = {"input": streamlit_tool.user_input}
+#         for i, s in enumerate(app.stream(input_data)):
+#             print(s)
+#             agent_name = list(s.keys())[-1]
+#             st.write(f"Agent: {agent_name}")
+#             st.write(f"Results/Outputs:")
+#             st.write(s[agent_name])
+#             progress_bar.progress((i + 1) / 4)    
 
-        #progress_bar = st.progress(0)
-        
-        for i, s in enumerate(app.stream(input_data)):
-            print(s)
-            #agent_name = list(s.keys())[-1]
-            #st.write(f"Agent: {agent_name}")
-            #st.write(f"Results/Outputs:")
-            #st.write(s[agent_name])
-            #progress_bar.progress((i + 1) / 4)      
-
-    except KeyError as e:
-        print(f"Error: Missing required environment variable - {str(e)}")
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
+#     except KeyError as e:
+#         print(f"Error: Missing required environment variable - {str(e)}")
+#     except Exception as e:
+#         print(f"An error occurred: {str(e)}")
